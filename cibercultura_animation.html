@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cibercultura e Inteligência Coletiva</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a, #1a1a3a, #2d1b69);
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .content-area {
+            width: 100%;
+            max-width: 1000px;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 4.5em;
+            color: #00ffff;
+            text-shadow: 0 0 30px rgba(0,255,255,0.8);
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(-50px);
+            animation: slideDown 1.5s ease-out 0.5s forwards;
+        }
+
+        .subtitle {
+            font-size: 2.8em;
+            color: #4ecdc4;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideUp 1.5s ease-out 1s forwards;
+        }
+
+        .description {
+            font-size: 2.2em;
+            line-height: 1.6;
+            max-width: 900px;
+            margin-bottom: 50px;
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: slideRight 1.5s ease-out 1.5s forwards;
+        }
+
+        .section-title {
+            font-size: 3.8em;
+            color: #ffe66d;
+            margin-bottom: 40px;
+            font-weight: bold;
+            text-shadow: 0 0 25px rgba(255,230,109,0.8);
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out 0.5s forwards;
+        }
+
+        .concept-box {
+            background: rgba(0,255,255,0.1);
+            border: 3px solid #00ffff;
+            border-radius: 25px;
+            padding: 40px;
+            margin: 30px 0;
+            max-width: 900px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 0 40px rgba(0,255,255,0.3);
+            opacity: 0;
+            animation: scaleIn 1.5s ease-out 1s forwards;
+        }
+
+        .point-list {
+            list-style: none;
+            font-size: 2em;
+            text-align: left;
+            max-width: 800px;
+            margin: 40px 0;
+        }
+
+        .point-item {
+            margin: 25px 0;
+            padding: 25px 35px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 20px;
+            border-left: 6px solid #00ffff;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateX(-100px);
+            animation-fill-mode: forwards;
+        }
+
+        .point-item.benefits { border-left-color: #4ecdc4; }
+        .point-item.challenges { 
+            border-left-color: #ff6b9d; 
+            background: rgba(255,107,157,0.15);
+        }
+
+        .highlight-quote {
+            font-size: 3.2em;
+            color: #00ffff;
+            font-style: italic;
+            text-align: center;
+            margin: 50px 0;
+            padding: 30px;
+            border: 3px solid #00ffff;
+            border-radius: 25px;
+            background: rgba(0,255,255,0.05);
+            box-shadow: 0 0 35px rgba(0,255,255,0.4);
+            opacity: 0;
+            animation: pulseIn 2s ease-out 1s forwards;
+        }
+
+        .school-info {
+            font-size: 1.8em;
+            color: #4ecdc4;
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 2s forwards;
+        }
+
+        .team-names {
+            font-size: 2.2em;
+            line-height: 1.8;
+            color: #ffffff;
+            margin: 40px 0;
+            opacity: 0;
+            animation: fadeIn 2s ease-out 1.5s forwards;
+        }
+
+        .final-message {
+            font-size: 2.8em;
+            color: #00ffff;
+            font-weight: bold;
+            margin-top: 40px;
+            opacity: 0;
+            animation: scaleIn 2s ease-out 2.5s forwards;
+        }
+
+        /* Elementos decorativos */
+        .floating-element {
+            position: absolute;
+            font-size: 3.5em;
+            opacity: 0.6;
+            animation: float 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .bg-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(0,255,255,0.6);
+            border-radius: 50%;
+            animation: particleFloat 20s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Barra de progresso */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ffff, #4ecdc4);
+            z-index: 1000;
+            transition: width 0.8s ease;
+            box-shadow: 0 0 10px rgba(0,255,255,0.6);
+        }
+
+        /* Caixa de texto narrativa */
+        .narration-box {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            color: #ffffff;
+            padding: 25px 40px;
+            border-radius: 25px;
+            border: 3px solid #00ffff;
+            max-width: 85%;
+            font-size: 1.6em;
+            line-height: 1.6;
+            text-align: center;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(-50%) translateY(30px);
+            transition: all 0.6s ease;
+            backdrop-filter: blur(15px);
+        }
+
+        .narration-box.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Animações */
+        @keyframes slideDown {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideRight {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideLeft {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes scaleIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulseIn {
+            to { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.6; }
+            25% { transform: translateY(-30px) rotate(90deg); opacity: 0.8; }
+            50% { transform: translateY(-15px) rotate(180deg); opacity: 0.7; }
+            75% { transform: translateY(-25px) rotate(270deg); opacity: 0.9; }
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10%, 90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Animações específicas para listas */
+        .animate-item-1 { animation: slideRight 1s ease-out 2s forwards; }
+        .animate-item-2 { animation: slideRight 1s ease-out 2.4s forwards; }
+        .animate-item-3 { animation: slideRight 1s ease-out 2.8s forwards; }
+        .animate-item-4 { animation: slideRight 1s ease-out 3.2s forwards; }
+        .animate-item-5 { animation: slideRight 1s ease-out 3.6s forwards; }
+        .animate-item-6 { animation: slideRight 1s ease-out 4s forwards; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .video-container { padding: 20px; }
+            .main-title { font-size: 3em; }
+            .subtitle { font-size: 2.2em; }
+            .description { font-size: 1.8em; }
+            .section-title { font-size: 2.8em; }
+            .point-list { font-size: 1.6em; }
+            .point-item { padding: 20px 25px; margin: 20px 0; }
+            .highlight-quote { font-size: 2.2em; padding: 25px; }
+            .narration-box { 
+                font-size: 1.3em; 
+                padding: 20px 30px;
+                max-width: 95%;
+                bottom: 20px;
+            }
+            .team-names { font-size: 1.8em; }
+            .final-message { font-size: 2.2em; }
+        }
+
+        @media (max-width: 480px) {
+            .main-title { font-size: 2.5em; }
+            .subtitle { font-size: 1.8em; }
+            .description { font-size: 1.5em; }
+            .section-title { font-size: 2.2em; }
+            .point-list { font-size: 1.4em; }
+            .highlight-quote { font-size: 1.8em; }
+            .narration-box { font-size: 1.1em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <div class="content-area" id="contentArea">
+            <!-- Conteúdo será inserido dinamicamente -->
+        </div>
+        
+        <div class="narration-box" id="narrationBox"></div>
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <script>
+        const segments = [
+            // Segmento 1: Introdução
+            {
+                duration: 25000,
+                content: `
+                    <div class="main-title">🌐 CIBERCULTURA</div>
+                    <div class="subtitle">& Inteligência Coletiva</div>
+                    <div class="description">Transformações sociais impulsionadas pelas tecnologias digitais</div>
+                    <div class="floating-element" style="top: 10%; right: 15%;">🚀</div>
+                    <div class="floating-element" style="bottom: 15%; left: 20%;">💡</div>
+                    <div class="floating-element" style="top: 25%; left: 10%;">🌟</div>
+                `,
+                narration: "Vivemos em uma era de transformações digitais sem precedentes. A Cibercultura e a Inteligência Coletiva são fenômenos que estão redefinindo completamente nossa sociedade, nossa forma de aprender, trabalhar e nos relacionar. Estas mudanças não são apenas tecnológicas - são culturais, sociais e comportamentais, criando novas formas de existir e interagir no mundo moderno.",
+                startDelay: 2000,
+                endDelay: 3000
+            },
+
+            // Segmento 2: Definindo Cibercultura
+            {
+                duration: 30000,
+                content: `
+                    <div class="section-title">🌍 CIBERCULTURA</div>
+                    <div class="concept-box">
+                        <div class="description">Conjunto de práticas sociais que emergem com o uso das tecnologias digitais e da internet</div>
+                    </div>
+                    <ul class="point-list">
+                        <li class="point-item animate-item-1">🔄 Transforma relacionamentos sociais e familiares</li>
+                        <li class="point-item animate-item-2">📱 Revoluciona o consumo e criação de informação</li>
+                        <li class="point-item animate-item-3">🆔 Reconstrói identidades e personalidades digitais</li>
+                        <li class="point-item animate-item-4">🌐 Cria novos espaços virtuais de convivência</li>
+                    </ul>
+                `,
+                narration: "A Cibercultura vai muito além do simples uso de dispositivos eletrônicos. Ela representa uma revolução cultural completa que transformou radicalmente como nos comunicamos, construímos relacionamentos e desenvolvemos nossa identidade. Hoje, mantemos amizades através de redes sociais, trabalhamos remotamente, construímos nossa imagem pessoal e profissional através de perfis digitais, e vivenciamos experiências significativas em espaços virtuais que são tão reais quanto os físicos.",
+                startDelay: 2000,
+                endDelay: 3000
+            },
+
+            // Segmento 3: Inteligência Coletiva
+            {
+                duration: 35000,
+                content: `
+                    <div class="section-title">🧠 INTELIGÊNCIA COLETIVA</div>
+                    <div class="concept-box">
+                        <div class="description">Processo onde grupos de pessoas colaboram digitalmente para gerar conhecimento mais complexo e eficiente do que seria possível individualmente</div>
+                    </div>
+                    <ul class="point-list">
+                        <li class="point-item animate-item-1">🤝 Colaboração supera capacidades individuais</li>
+                        <li class="point-item animate-item-2">📚 Wikipedia: 60 milhões de artigos colaborativos</li>
+                        <li class="point-item animate-item-3">🔄 Conhecimento construído democraticamente em rede</li>
+                        <li class="point-item animate-item-4">⚡ Solução coletiva e rápida de problemas complexos</li>
+                    </ul>
+                    <div class="floating-element" style="top: 20%; right: 10%;">🔗</div>
+                `,
+                narration: "A Inteligência Coletiva representa um dos fenômenos mais fascinantes da era digital. Quando milhares ou milhões de pessoas colaboram online, criam uma forma de inteligência que supera vastamente qualquer capacidade individual. A Wikipedia é o exemplo mais impressionante: mais de 100 mil colaboradores voluntários criaram 60 milhões de artigos em 300 idiomas, formando a maior enciclopédia da história humana. Este mesmo princípio funciona em projetos de código aberto, pesquisas científicas colaborativas e resolução coletiva de problemas complexos.",
+                startDelay: 2000,
+                endDelay: 3000
+            },
+
+            // Segmento 4: IA e Automação
+            {
+                duration: 28000,
+                content: `
+                    <div class="section-title">🤖 INTELIGÊNCIA ARTIFICIAL</div>
+                    <div class="concept-box">
+                        <div class="description">Revolução tecnológica que transforma trabalho, educação e criação de conteúdo</div>
+                    </div>
+                    <ul class="point-list">
+                        <li class="point-item animate-item-1">💼 Transformação completa do mercado de trabalho</li>
+                        <li class="point-item animate-item-2">🎓 Personalização revolucionária do ensino</li>
+                        <li class="point-item animate-item-3">📝 Automação inteligente de criação de conteúdo</li>
+                        <li class="point-item animate-item-4">🔮 Surgimento de profissões completamente novas</li>
+                    </ul>
+                    <div class="floating-element" style="bottom: 20%; right: 15%;">⚡</div>
+                `,
+                narration: "A Inteligência Artificial representa a fronteira mais avançada da revolução digital. Médicos utilizam IA para diagnósticos mais precisos e rápidos, educadores criam experiências de aprendizagem personalizadas para cada estudante, e profissionais de diversas áreas colaboram com IA para amplificar suas capacidades criativas e analíticas. Esta tecnologia não substitui o trabalho humano, mas o transforma, criando novas profissões e possibilidades que antes eram inimagináveis.",
+                startDelay: 2000,
+                endDelay: 3000
+            },
+
+            // Segmento 5: Benefícios
+            {
+                duration: 25000,
+                content: `
+                    <div class="section-title" style="color: #4ecdc4;">✅ IMPACTOS POSITIVOS</div>
+                    <ul class="point-list">
+                        <li class="point-item benefits animate-item-1">🔍 Democratização do acesso ao conhecimento mundial</li>
+                        <li class="point-item benefits animate-item-2">💼 Oportunidades profissionais sem fronteiras geográficas</li>
+                        <li class="point-item benefits animate-item-3">🌐 Comunicação global instantânea e gratuita</li>
+                        <li class="point-item benefits animate-item-4">🤝 Colaboração internacional em tempo real</li>
+                        <li class="point-item benefits animate-item-5">🎓 Acesso a educação de qualidade mundial</li>
+                    </ul>
+                    <div class="floating-element" style="top: 15%; left: 10%;">🌟</div>
+                `,
+                narration: "Os benefícios da cultura digital são verdadeiramente transformadores para a sociedade. Hoje, qualquer pessoa pode acessar cursos das melhores universidades mundiais, trabalhar remotamente para empresas globais, comunicar-se instantaneamente com pessoas em qualquer lugar do planeta, e participar de projetos colaborativos internacionais. Essa democratização do conhecimento e das oportunidades quebrou barreiras sociais, econômicas e geográficas tradicionais.",
+                startDelay: 2000,
+                endDelay: 3000
+            },
+
+            // Segmento 6: Desafios
+            {
+                duration: 27000,
+                content: `
+                    <div class="section-title" style="color: #ff6b9d;">⚠️ DESAFIOS CRÍTICOS</div>
+                    <ul class="point-list">
+                        <li class="point-item challenges animate-item-1">🔒 Riscos sérios à privacidade e segurança de dados</li>
+                        <li class="point-item challenges animate-item-2">📱 Dependência excessiva e problemas de saúde mental</li>
+                        <li class="point-item challenges animate-item-3">📰 Disseminação rápida de fake news e desinformação</li>
+                        <li class="point-item challenges animate-item-4">📊 Exclusão digital e desigualdade de acesso</li>
+                        <li class="point-item challenges animate-item-5">⚖️ Questões éticas sobre IA e automação</li>
+                    </ul>
+                `,
+                narration: "Contudo, enfrentamos desafios significativos que exigem atenção urgente. A privacidade de dados pessoais está constantemente ameaçada, muitas pessoas desenvolvem dependência problemática de tecnologias digitais, a desinformação se propaga rapidamente através de redes sociais, e ainda existem grandes desigualdades no acesso às tecnologias digitais. Estes problemas requerem soluções conscientes e responsáveis de toda a sociedade.",
+                startDelay: 2000,
+                endDelay: 3000
+            },
+
+            // Segmento 7: Conclusão
+            {
+                duration: 30000,
+                content: `
+                    <div class="section-title">🎯 CONSTRUINDO O FUTURO</div>
+                    <div class="concept-box">
+                        <div class="description">A Cibercultura representa uma transformação irreversível e profunda da sociedade humana</div>
+                    </div>
+                    <div class="highlight-quote">"A tecnologia deve servir à humanidade, não dominá-la"</div>
+                    <div class="concept-box">
+                        <div class="description" style="color: #ffe66d;">É essencial desenvolver pensamento crítico e promover inclusão digital responsável</div>
+                    </div>
+                `,
+                narration: "A Cibercultura e a Inteligência Coletiva já transformaram irreversivelmente nossa sociedade, e essa transformação continua acelerando. O futuro será ainda mais digital, conectado e inteligente. Nossa responsabilidade é garantir que essas tecnologias amplifiquem o que há de melhor na humanidade - nossa criatividade, compaixão e capacidade de colaborar. Devemos desenvolver pensamento crítico, promover inclusão digital responsável e sempre lembrar que a tecnologia deve servir à humanidade, não dominá-la.",
+                startDelay: 2000,
+                endDelay: 3000
+            },
+
+            // Segmento 8: Créditos
+            {
+                duration: 20000,
+                content: `
+                    <div class="section-title">👨‍🎓 REALIZAÇÃO</div>
+                    <div class="subtitle">EEEM Doutor Silva Mello</div>
+                    <div class="team-names">
+                        Davi Azevedo • Gabriel Vieira • Gabryel Lima<br>
+                        Luccas Luiz Mariano • Nikolas Bessa • Ricardo dos Santos
+                    </div>
+                    <div class="school-info">Disciplina: Cultura Digital | Professor: Claudio Batista</div>
+                    <div class="final-message">Obrigado pela atenção!</div>
+                    <div class="floating-element" style="top: 20%; right: 10%;">🎓</div>
+                    <div class="floating-element" style="bottom: 25%; left: 15%;">📚</div>
+                `,
+                narration: "Esta apresentação foi desenvolvida pelos estudantes da EEEM Doutor Silva Mello para a disciplina de Cultura Digital, sob orientação do Professor Claudio Batista. A pesquisa e análise dos conceitos de Cibercultura e Inteligência Coletiva demonstram como nossa geração está vivenciando e moldando ativamente essas transformações digitais fundamentais.",
+                startDelay: 2000,
+                endDelay: 3000
+            }
+        ];
+
+        let currentSegment = 0;
+        let segmentTimer;
+        let narrationTimer;
+
+        function showSegment(index) {
+            const segment = segments[index];
+            const contentArea = document.getElementById('contentArea');
+            const narrationBox = document.getElementById('narrationBox');
+            
+            // Limpar conteúdo anterior
+            contentArea.innerHTML = '';
+            narrationBox.classList.remove('show');
+            
+            // Inserir novo conteúdo
+            contentArea.innerHTML = segment.content;
+            
+            // Mostrar narração após delay inicial
+            setTimeout(() => {
+                narrationBox.textContent = segment.narration;
+                narrationBox.classList.add('show');
+                
+                // Esconder narração antes do final
+                narrationTimer = setTimeout(() => {
+                    narrationBox.classList.remove('show');
+                }, segment.duration - segment.endDelay);
+                
+            }, segment.startDelay);
+            
+            // Atualizar progresso
+            updateProgress(index);
+        }
+
+        function updateProgress(index) {
+            const totalDuration = segments.reduce((sum, seg) => sum + seg.duration, 0);
+            const currentTime = segments.slice(0, index + 1).reduce((sum, seg) => sum + seg.duration, 0);
+            const progress = (currentTime / totalDuration) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function nextSegment() {
+            currentSegment++;
+            if (currentSegment < segments.length) {
+                showSegment(currentSegment);
+                segmentTimer = setTimeout(nextSegment, segments[currentSegment].duration);
+            } else {
+                // Reiniciar após 5 segundos
+                setTimeout(() => {
+                    currentSegment = 0;
+                    startPresentation();
+                }, 5000);
+            }
+        }
+
+        function startPresentation() {
+            showSegment(0);
+            segmentTimer = setTimeout(nextSegment, segments[0].duration);
+        }
+
+        function createBackgroundParticles() {
+            const container = document.querySelector('.video-container');
+            
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 5 + 18) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Inicializar
+        window.addEventListener('load', () => {
+            createBackgroundParticles();
+            startPresentation();
+        });
+
+        // Reiniciar com duplo clique (discreto)
+        document.addEventListener('dblclick', () => {
+            clearTimeout(segmentTimer);
+            clearTimeout(narrationTimer);
+            currentSegment = 0;
+            startPresentation();
+        });
+    </script>
+</body>
+</html>
